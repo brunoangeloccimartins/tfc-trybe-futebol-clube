@@ -9,8 +9,8 @@ import db from '.';
 
 class Teams extends Model<InferAttributes<Teams>,
 InferCreationAttributes<Teams>> {
-  declare id: CreationOptional<number>
-  declare teamName: string
+  declare id: CreationOptional<number>;
+  declare teamName: string;
 }
 
 Teams.init({
