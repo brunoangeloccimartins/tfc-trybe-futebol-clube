@@ -4,16 +4,16 @@ import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 
 import { app } from '../app';
-import Example from '../database/models/ExampleModel';
+import Teams from '../database/models/teams.model';
 
 import { Response } from 'superagent';
+import teamsMock from './mocks/teams.mock';
 
 chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe('Seu teste', () => {
-  /**
+/**
    * Exemplo do uso de stubs com tipos
    */
 
@@ -39,7 +39,25 @@ describe('Seu teste', () => {
   //   expect(...)
   // });
 
-  it('Seu sub-teste', () => {
-    expect(false).to.be.eq(true);
+describe('Testes rota teams', () => {
+  beforeEach(function() {sinon.restore();});
+
+  it('Teste rota teams findAll', async () => {
+   const response = (await chai.request(app).get('/teams').send());
+
+    expect(response.status).to.be.equal(200);
+    expect(response.body).to.be.equal(teamsMock);
+  });
+  it('Teste rota teams findOnde', async () => {
+    sinon
+      .stub(Teams, "findOne")
+      .resolves({
+        ...teamsMock[0]
+      } as Teams);
+
+    const response = (await chai.request(app).get('/teams/1').send());
+
+    expect(response.status).to.be.equal(200);
+    expect(response.body).to.be.equal(teamsMock[0]);
   });
 });
