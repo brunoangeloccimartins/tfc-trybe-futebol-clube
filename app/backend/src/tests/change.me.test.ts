@@ -4,10 +4,8 @@ import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 
 import { app } from '../app';
-import Teams from '../database/models/teams.model';
-
-import { Response } from 'superagent';
 import teamsMock from './mocks/teams.mock';
+import SequelizeTeam from '../database/models/teams.sequelize.model';
 
 chai.use(chaiHttp);
 
@@ -43,21 +41,27 @@ describe('Testes rota teams', () => {
   beforeEach(function() {sinon.restore();});
 
   it('Teste rota teams findAll', async () => {
-   const response = (await chai.request(app).get('/teams').send());
+   sinon.stub(SequelizeTeam, 'findAll').resolves(teamsMock as any)
+   const {status, body} = await chai.request(app).get('/teams').send();
+   
 
-    expect(response.status).to.be.equal(200);
-    expect(response.body).to.be.equal(teamsMock);
+    expect(status).to.be.equal(200);
+    expect(body).to.be.deep.equal(teamsMock);
   });
   it('Teste rota teams findOnde', async () => {
-    sinon
-      .stub(Teams, "findOne")
-      .resolves({
-        ...teamsMock[0]
-      } as Teams);
+    sinon.stub(SequelizeTeam, 'findByPk').resolves(teamsMock[0] as any)
 
-    const response = (await chai.request(app).get('/teams/1').send());
+    const {status, body} = await chai.request(app).get('/teams/1').send();
 
-    expect(response.status).to.be.equal(200);
-    expect(response.body).to.be.equal(teamsMock[0]);
+    expect(status).to.be.equal(200);
+    expect(body).to.be.deep.equal(teamsMock[0]);
+  });
+  it('Teste rota teams findOnde', async () => {
+    sinon.stub(SequelizeTeam, 'findByPk').resolves(null as any)
+
+    const {status, body} = await chai.request(app).get('/teams/1').send();
+
+    expect(status).to.be.equal(404);
+    expect(body).to.be.eql({message: 'Team not found'});
   });
 });
