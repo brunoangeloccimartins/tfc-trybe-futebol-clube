@@ -15,7 +15,7 @@ router.post(
 router.get(
   '/role',
   Validation.validateToken,
-  (req: Request, res: Response) => userController.findByEmail(req, res),
+  (req: Request, res: Response) => UserController.getRole(req, res),
 );
 
 export default router;
