@@ -8,7 +8,6 @@ export default class UserController {
   ) {}
 
   public async login(req: Request, res: Response) {
-    console.log(req.body);
     const response = await this.userService.login(req.body);
     if (response.status === 'NOT_FOUND') { return res.status(404).json(response.data); }
     res.status(200).json(response.data);
