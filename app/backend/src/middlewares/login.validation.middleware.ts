@@ -20,13 +20,13 @@ export default class Validation {
 
   static async validateToken(req: Request, res: Response, next: NextFunction) {
     const token = req.headers.authorization;
-    if (token?.startsWith('Bearer ')) {
-      req.headers.authorization = token.slice(7, token.length);
-    }
     if (!token) {
       return res.status(401).json({
         message: 'Token not found',
       });
+    }
+    if (token?.startsWith('Bearer ')) {
+      req.headers.authorization = token.slice(7);
     }
     try {
       const decoded = await JWT.verify(token);

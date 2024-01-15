@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcryptjs';
+import { JwtPayload } from 'jsonwebtoken';
 import { ILogin } from '../Interfaces/ILogin';
 import { IToken } from '../Interfaces/IToken';
 import JWT from '../utils/token/JWT';
@@ -17,5 +18,15 @@ export default class UserService {
     }
     const token = JWT.sign({ role: user.role });
     return { status: 'SUCCESS', data: { token } };
+  }
+
+  public async getRole(data:string): Promise<ServiceResponse<boolean | JwtPayload>> {
+    const user = await this.userModel.getRole(data);
+    console.log(user);
+    if (!user) {
+      return { status: 'NOT_FOUND', data: { message: 'User not found' } };
+    }
+    const token = JWT.verify(data);
+    return { status: 'SUCCESS', data: token };
   }
 }

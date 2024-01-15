@@ -6,7 +6,29 @@ export default class MatchesController {
 
   public async findAll(req: Request, res: Response) {
     const response = await this.matchesService.getMatches();
-    console.log(response);
+    res.status(200).json(response);
+  }
+
+  public async findFiltered(req: Request, res: Response) {
+    const { inProgress } = req.query;
+    if (inProgress === undefined || inProgress === null || inProgress === '') {
+      const response = await this.matchesService.getMatches();
+      res.status(200).json(response);
+      return;
+    }
+    const response = await this.matchesService.getFilteredMatches(String(inProgress));
+    res.status(200).json(response);
+  }
+
+  public async finishMatch(req: Request, res: Response) {
+    const { id } = req.params;
+    const response = await this.matchesService.finishMatch(Number(id));
+    res.status(200).json(response);
+  }
+
+  public async updateMatch(req: Request, res: Response) {
+    const match = req.body;
+    const response = await this.matchesService.updateMatch(match);
     res.status(200).json(response);
   }
 }

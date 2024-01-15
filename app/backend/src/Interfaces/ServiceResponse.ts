@@ -1,4 +1,4 @@
-export type ServiceMessage = { message: string };
+export type ServiceMessage = { message?: string, role?: string | null };
 
 type ServiceResponseErrorType = 'INVALID_DATA' | 'NOT_FOUND' | 'UNAUTHORIZED' | 'CONFLICT';
 
@@ -9,7 +9,7 @@ export type ServiceResponseError = {
 
 export type ServiceResponseSuccess<T> = {
   status: 'SUCCESS';
-  data: T;
+  data: T | ServiceMessage;
 };
 
 export type ServiceResponse<T> = ServiceResponseError | ServiceResponseSuccess<T>;
