@@ -5,10 +5,8 @@ import matchRouter from './matches.routes';
 
 const router = Router();
 
-router.use('/teams', teamRouter);
-router.use('/teams/:id', teamRouter);
 router.use('/login', loginRouter);
-router.use('/login/role', loginRouter);
+router.use('/teams', teamRouter);
 router.use('/matches', matchRouter);
 
 export default router;

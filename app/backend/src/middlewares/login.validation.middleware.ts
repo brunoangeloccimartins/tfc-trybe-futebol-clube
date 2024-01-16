@@ -11,7 +11,7 @@ export default class Validation {
     }
     const emailRegex = /\S+@\S+\.\S+/;
     if (!emailRegex.test(email) || password.length < 6) {
-      return res.status(400).json({
+      return res.status(401).json({
         message: 'Invalid email or password',
       });
     }
@@ -25,17 +25,13 @@ export default class Validation {
         message: 'Token not found',
       });
     }
-    if (token?.startsWith('Bearer ')) {
-      req.headers.authorization = token.slice(7);
-    }
-    try {
-      const decoded = await JWT.verify(token);
-      req.body = decoded;
-      next();
-    } catch (error) {
+    const tokenWithoutBearer = token.startsWith('Bearer ') ? token.slice(7) : token;
+    const decoded = await JWT.verify(tokenWithoutBearer);
+    if (!decoded) {
       return res.status(401).json({
         message: 'Token must be a valid token',
       });
     }
+    next();
   }
 }

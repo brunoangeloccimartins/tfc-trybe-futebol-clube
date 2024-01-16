@@ -7,9 +7,9 @@ export default class MatchesService {
     private ModelMatches: MatchesModel = new MatchesModel(),
   ) { }
 
-  public async getMatches(): Promise<IMatches[]> {
+  public async getMatches(): Promise<ServiceResponse<IMatches[]>> {
     const matches = await this.ModelMatches.getMatches();
-    return matches;
+    return { status: 'SUCCESS', data: matches };
   }
 
   public async getFilteredMatches(filter: string): Promise<ServiceResponse<IMatches[]>> {
