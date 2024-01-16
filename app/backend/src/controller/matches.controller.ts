@@ -27,8 +27,23 @@ export default class MatchesController {
   }
 
   public async updateMatch(req: Request, res: Response) {
-    const match = req.body;
+    const { id } = req.params;
+    const { homeTeamGoals, awayTeamGoals } = req.body;
+    const { inProgress } = req.query;
+    const match = { id: Number(id),
+      homeTeamGoals: Number(homeTeamGoals),
+      awayTeamGoals: Number(awayTeamGoals),
+      inProgress: String(inProgress) === 'true' };
     const response = await this.matchesService.updateMatch(match);
     res.status(200).json(response.data);
+  }
+
+  public async createMatch(req: Request, res: Response) {
+    const newMatch = {
+      ...req.body,
+      inProgress: true,
+    };
+    const response = await this.matchesService.createMatch(newMatch);
+    res.status(201).json(response.data);
   }
 }

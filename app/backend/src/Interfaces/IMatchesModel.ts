@@ -6,4 +6,5 @@ export default interface IMatchesModel {
   findMatchById(id: number): Promise<IMatches | null>;
   finishMatch(id: number): Promise<void>;
   updateMatch(match: IMatches): Promise<void>;
+  createMatch(match: IMatches): Promise<IMatches>;
 }

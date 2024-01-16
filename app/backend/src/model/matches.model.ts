@@ -35,4 +35,21 @@ export default class MatchesModel implements IMatchesModel {
     const { id, homeTeamGoals, awayTeamGoals } = match;
     await this.model.update({ homeTeamGoals, awayTeamGoals }, { where: { id } });
   }
+
+  async createMatch(match: IMatches): Promise<IMatches> {
+    const { homeTeamId, awayTeamId, homeTeamGoals, awayTeamGoals, inProgress } = match;
+    if (typeof homeTeamId !== 'number' || typeof awayTeamId !== 'number'
+      || typeof homeTeamGoals !== 'number' || typeof awayTeamGoals !== 'number'
+      || typeof inProgress !== 'boolean') {
+      throw new Error('Invalid match data');
+    }
+    const newMatch = await this.model.create({
+      homeTeamId,
+      awayTeamId,
+      homeTeamGoals,
+      awayTeamGoals,
+      inProgress,
+    });
+    return newMatch;
+  }
 }
